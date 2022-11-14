@@ -107,6 +107,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('instructor-withdraw-request', 'InstructorController@withdrawRequest')->name('instructor.withdraw.request');
 
         Route::get('instructor-withdraw-requests', 'InstructorController@listWithdrawRequests')->name('instructor.list.withdraw');
+    
+        Route::get('/quize_user','InstructorController@quize_user')->name('quize_user');
+
+        Route::get('/admin_view_result/{id}','InstructorController@admin_view_result')->name('quize.admin_view_answer');
 
         // Save Curriculum
         Route::post('courses/section/save', 'CourseController@postSectionSave');
@@ -236,9 +240,22 @@ Route::group(['middleware' => 'auth'], function () {
 //quiz
 Route::post('add_new_question','QuizeController@add_new_question')->name('add_new_question');
 Route::get('quize_list', 'QuizeController@index')->name('quize.list');
+Route::get('question_edit/{id}', 'QuizeController@edit')->name('question_edit');
+Route::get('delete_question/{id}', 'QuizeController@delete_question')->name('delete_question');
+Route::post('/edit_question_inner/{id}','QuizeController@edit_question_inner');
 
 
 Route::get('/view_answer/{id}', 'CourseController@view_answer');
+Route::get('/quize_exam/{id}','CourseController@join_exam');
+
+
+Route::post('submit_questions','CourseController@submit_questions');
+Route::get('/show_result/{id}','CourseController@show_result');
+
+
+        Route::get('/apply_exam/{id}','CourseController@apply_exam');
+        Route::get('/view_result/{id}','CourseController@view_result');
+        Route::get('/view_answer/{id}','CourseController@view_answer');
 
 
 

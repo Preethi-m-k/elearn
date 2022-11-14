@@ -164,8 +164,11 @@
 					</div>
                     <!-- curriculum block end -->
 
+                  
+                   
 
-                    <!-- <a href ="quize_exam/".$couse_id>Quize for The Learning Session</a> -->
+
+                    <a href ="/quize_exam/{{$course->id}}">Quize for The Learning Session</a>
                     @endif
                 </div>
             </div>
@@ -190,6 +193,13 @@
                         <li><i class="far fa-play-circle"></i>Videos: {{ $videos_count }}</li>
                         <li><i class="far fa-address-card"></i>Certificate of Completion</li>
                         <li><i class="fas fa-file-download"></i>Downloadable Resources</li> -->
+
+                        <li>
+                        <a href="/view_result/{{$course->id}}"><i class="fas fa-file-download"></i>view Quize Result</a></li>
+                        <li>
+                        <a href="/view_answer/{{$course->id}}"><i class="fas fa-file-download"></i>view Answer for Quize</a></li>
+
+
                     </ul>
                 </section>
                 

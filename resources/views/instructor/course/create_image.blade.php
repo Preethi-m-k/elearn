@@ -212,7 +212,7 @@ figure figcaption {
             });
         });
 
-        $('.item-img').on('change', function () { imageId = $(this).data('id'); tempFilename = $(this).val();
+    $('.item-img').on('change', function () { imageId = $(this).data('id'); tempFilename = $(this).val();
          readFile(this, $(this).attr('id')); });
         $('#cropImageBtn').on('click', function (ev) {
             var data_id = $(this).attr('data-id');

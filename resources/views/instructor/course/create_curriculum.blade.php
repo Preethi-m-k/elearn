@@ -104,7 +104,7 @@ $course_id = $course->id;
                             @if(empty($lecturequiz->description))
                             <input type="button" name="lecture_add_content" class="adddescription" value="{!! Lang::get('curriculum.Add_Description')!!}" data-blockid="{!! $lecturequiz->lecture_quiz_id !!}">
 
-                            <!-- <input type="button" data-toggle="modal" data-target="#myModal"  class="addquize" value="Add Quize"> -->
+                            <input type="button" data-toggle="modal" data-target="#myModal"  class="addquize" value="Add Quiz">
                             
                             @endif
                             @if(empty($lecturequiz->media) && is_null($lecturequiz->media_type))

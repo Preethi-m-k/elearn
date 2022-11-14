@@ -60,9 +60,11 @@ class QuizeController extends Controller
      * @param  \App\quize  $quize
      * @return \Illuminate\Http\Response
      */
-    public function edit(quize $quize)
+    public function edit(Request $request, $id)
     {
-        //
+        $q = quize::find($id);
+        return view('instructor.quize.edit', compact('q'));
+
     }
 
     /**
@@ -147,7 +149,7 @@ class QuizeController extends Controller
 
 
     //Edit question status
-    public function question_status($id){
+    public function question_edit($id){
         $p = quize::where('id',$id)->get()->first();
 
         if($p->status==1)
@@ -155,8 +157,56 @@ class QuizeController extends Controller
         else
             $status=1;
         
-        $p1 = Oex_question_master::where('id',$id)->get()->first();
+        $p1 = quize::where('id',$id)->get()->first();
         $p1->status=$status;
         $p1->update();
     }
+
+    //Edit question
+    public function edit_question_inner(Request $request, $id){
+
+        $q=quize::where('id',$id)->get()->first();
+
+        $q->questions = $request->question;
+
+        if($request->ans=='option_1'){
+            $q->ans=$request->option_1;
+        }elseif($request->ans=='option_2'){
+            $q->ans=$request->option_2;
+        }elseif($request->ans=='option_3'){
+            $q->ans=$request->option_3;
+        }else{
+            $q->ans=$request->option_4;
+        }
+
+        $q->options = json_encode(array('option1'=>$request->option_1,'option2'=>$request->option_2,'option3'=>$request->option_3,'option4'=>$request->option_4));
+        
+        $q->update();
+
+        echo json_encode(array('status'=>'true','message'=>'successfully updated','reload'=>url('admin/add_questions/'.$q->exam_id)));
+
+    }
+
+      //Delete questions
+      public function delete_question($id){
+
+        $q=quize::where('id',$id)->get()->first();
+        $exam_id = $q->exam_id;
+        $q->delete();
+
+        return redirect()->back();
+    }
+
+
+       //View Result
+       public function view_result($id){
+
+        $data['result_info'] = Oex_result::where('exam_id',$id)->where('user_id',Session::get('id'))->get()->first();
+        
+        $data['student_info'] = User::where('id',Session::get('id'))->get()->first();
+
+        $data['exam_info']=Oex_exam_master::where('id',$id)->get()->first();
+
+        return view('student.view_result',$data);
+}
 }

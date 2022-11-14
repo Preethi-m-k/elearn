@@ -20,12 +20,18 @@
                 <span class="site-menu-title">Courses</span>
             </a>
         </li>
-        <!-- <li class="site-menu-item {{ request()->is('quize.list') ? 'active' : '' }}">
+        <li class="site-menu-item {{ request()->is('quize.list') ? 'active' : '' }}">
             <a href="{{ route('quize.list') }}">
                 <i class="site-menu-icon fas fa-chalkboard" aria-hidden="true"></i>
-                <span class="site-menu-title">Quize Details</span>
+                <span class="site-menu-title">Quiz Details</span>
             </a>
-        </li> -->
+        </li>
+        <li class="site-menu-item {{ request()->is('quize.list') ? 'active' : '' }}">
+            <a href="{{ route('quize_user') }}">
+                <i class="site-menu-icon fas fa-chalkboard" aria-hidden="true"></i>
+                <span class="site-menu-title">Quiz user details</span>
+            </a>
+        </li>
         <!-- <li class="site-menu-item {{ request()->is('instructor-credits') ? 'active' : '' }}">
             <a href="{{ route('instructor.credits') }}">
                 <i class="site-menu-icon fas fa-hand-holding-usd" aria-hidden="true"></i>

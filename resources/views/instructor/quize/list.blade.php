@@ -24,9 +24,10 @@
             <thead>
               <tr>
                 <th>Sl.no</th>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>Category</th>
+                <th>Exam id</th>
+                <th>Question</th>
+                <th>Ansewer</th>
+                <th>Status</th>
                   <th>Actions</th>
               </tr>
             </thead>
@@ -36,7 +37,23 @@
                 <td>{{ $course->id }}</td>
                 <td>{{ $course->exam_id }}</td>
                 <td>{{ $course->questions }}</td>
-                <td>{{ $course->status }}</td>
+                <td>{{ $course->ans }}</td>
+                <td>
+                  @if($course->status ==1)
+                  <span class="badge badge-success">Active</span>
+                  @else
+                  <span class="badge badge-danger">Inactive</span>
+                  @endif
+                </td>
+                <td>
+                  <a href=" question_edit/{{$course->id}}" class="btn btn-xs btn-icon btn-inverse btn-round" data-toggle="tooltip" data-original-title="Edit" >
+                    <i class="icon wb-pencil" aria-hidden="true"></i>
+                  </a>
+
+                  <a href="delete_question/{{$course->id }}" class="delete-record btn btn-xs btn-icon btn-inverse btn-round" data-toggle="tooltip" data-original-title="Delete" >
+                    <i class="icon wb-trash" aria-hidden="true"></i>
+                  </a>
+                </td>
               </tr>
               @endforeach
             </tbody>

@@ -24,6 +24,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactInstructor;
 use Auth;
 
+
+use App\user_exam;
+use App\quize_exam_master;
+use App\quize_result;
+
 class InstructorController extends Controller
 {
     /**
@@ -212,6 +217,35 @@ class InstructorController extends Controller
                             ->paginate(10);
 
         return view('instructor.withdraw_requests', compact('withdraw_requests'));
+    }
+
+
+    //quiz
+
+    public function quize_user()
+    {
+        $student = user_exam::all();
+        //$data['student'] = User::where('id',$std_exam->user_id)->get()->first();
+
+
+        return view('instructor.quize_list',compact('student'));
+
+    }
+    public function admin_view_result($id){
+        
+        $std_exam = user_exam::where('user_id',$id)->get()->first();
+        
+        $data['student_info'] = User::where('id',$std_exam->user_id)->get()->first();
+
+        $data['exam_info'] = quize_exam_master::where('id',$std_exam->exam_id)->get()->first();
+
+        $data['result_info'] = quize_result::where('user_id',$std_exam->user_id)->get()->first();
+
+        //dd($data);
+
+        return view('instructor.admin_view_result',$data);
+
+
     }
     
 }

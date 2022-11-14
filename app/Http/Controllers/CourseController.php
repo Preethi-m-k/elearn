@@ -21,6 +21,9 @@ use App\Models\CourseVideos;
 use App\Models\CourseFiles;
 use Session;
 use App\quize;
+use App\quize_exam_master;
+use App\quize_result;
+use App\user_exam;
 use Auth;
 
 
@@ -1161,13 +1164,105 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {               $ffmpeg_path = b
 
 
 
+    ////////////////////////////////////////////////quize///////////////////////////////
 
-     //View answer
-     public function view_answer($id){
+
+    //student dashboard
+    public function dashboard(){
         
-        $data['question']= quize::where('exam_id',$id)->get()->toArray();
+        $data['portal_exams']=Oex_exam_master::select(['oex_exam_masters.*','oex_categories.name as cat_name'])
+        ->join('oex_categories','oex_exam_masters.category','=','oex_categories.id')
+        ->orderBy('id','desc')->where('oex_exam_masters.status','1')->get()->toArray();
+        return view('student.dashboard',$data);
+    }
 
-        return view('site.course.learn',$data);
+
+    //Exam page
+    public function exam(){
+
+
+            $student_info = user_exam::select(['user_exams.*','users.name','oex_exam_masters.title','oex_exam_masters.exam_date'])
+            ->join('users','users.id','=','user_exams.user_id')
+            ->join('oex_exam_masters','user_exams.exam_id','=','oex_exam_masters.id')->orderBy('user_exams.exam_id','desc')
+            ->where('user_exams.user_id',Session::get('id'))
+            ->where('user_exams.std_status','1')
+            ->get()->toArray();
+            
+            return view('student.exam',['student_info'=>$student_info]);
+
+    }
+
+
+    //join exam page
+    public function join_exam($id){
+        
+        $data['question']= quize::where('course_id',$id)->get();
+        $data['exam']   = quize_exam_master::where('id',$id)->get()->first();
+        return view('instructor.quize.join_exam',$data);
+    }
+    //View Result
+    public function view_result($id){
+
+        $user_id =Auth::id();
+
+        $data['result_info'] = quize_result::where('exam_id',$id)->where('user_id',$user_id)->get()->first();
+        
+        $data['student_info'] = User::where('id',$user_id)->get()->first();
+
+        $data['exam_info']=quize_exam_master::where('id',$id)->get()->first();
+
+        return view('instructor.quize.view_result',$data);
+}
+
+
+//View answer
+public function view_answer($id){
+    
+    $data['question']= quize::where('course_id',$id)->get()->toArray();
+
+    return view('instructor.quize.view_anser',$data);
+}
+
+
+    //On submit
+    public function submit_questions(Request $request){    
+        
+        //dd($request->all());
+        $yes_ans=0;
+        $no_ans=0;
+        $data= $request->all();
+        $result=array();
+        for($i=1;$i<=$request->index;$i++){
+
+            if(isset($data['question'.$i])){
+                    $q=quize::where('id',$data['question'.$i])->get()->first();
+
+                    if($q->ans==$data['ans'.$i]){
+                        $result[$data['question'.$i]]='YES';
+                        $yes_ans++;
+                    }else{
+                        $result[$data['question'.$i]]='NO';
+                        $no_ans++;
+                    }
+            }
+        }
+
+    //     $user_id =$request->user_id;
+    
+    //    $std_info = user_exam::where('user_id',$user_id)->where('exam_id',$request->course_id)->get()->first();
+    //    $std_info->exam_joined =1;
+    //    $std_info->update();
+
+
+       $res = new quize_result();
+       $res->exam_id=$request->course_id;
+       $res->user_id = Auth::id();
+       $res->yes_ans=$yes_ans;
+       $res->no_ans=$no_ans;
+       $res->result_json=json_encode($result);
+
+       echo $res->save();
+       return redirect()->back();
     }
 
 
