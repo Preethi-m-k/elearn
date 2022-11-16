@@ -1,5 +1,13 @@
 @extends('layouts.backend.index')
 @section('content')
+
+<style type="text/css">
+    .question_options>li{
+        list-style: none;
+        height: 40px;
+        line-height: 40px;
+    }
+</style>
 <div class="page-header">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('instructor.dashboard') }}">Dashboard</a></li>
@@ -22,15 +30,12 @@
           <div class="row">
             <div class="col-12">
               <!-- Default box -->
-              <div class="card">
+              <!-- <div class="card">
                 
                 <div class="card-body">
-                   <div class="row">
+                   <div class="row">                       
                        <div class="col-sm-4">
-                          <h3 class="text-center">Time : {{ $exam->exam_duration}} min</h3>
-                       </div>
-                       <div class="col-sm-4">
-                           <h3><b>Timer</b> :  <span class="js-timeout" id="timer">{{ $exam['exam_duration']}}:00</span></h3>
+                           <h3><b>Timer</b> :  <span class="js-timeout" id="timer"></span></h3>
                        </div>
                        
                         <div class="col-sm-4">
@@ -38,8 +43,7 @@
                         </div>
                    </div>
                 </div>
-                <!-- /.card-body -->
-              </div>
+              </div> -->
               <!-- /.card -->
               <div class="card mt-4">
                 

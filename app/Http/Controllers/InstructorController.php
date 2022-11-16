@@ -224,8 +224,15 @@ class InstructorController extends Controller
 
     public function quize_user()
     {
-        $student = user_exam::all();
-        //$data['student'] = User::where('id',$std_exam->user_id)->get()->first();
+        $student = DB::table('user_exams')
+        ->join('users', 'users.id', '=', 'user_exams.user_id')
+        ->select('users.*', 'user_exams.*')
+        ->get();
+        //user_exam::all();
+        //dd($student);
+
+        
+        //$data['user'] = User::where('id',$id)->get()->first();
 
 
         return view('instructor.quize_list',compact('student'));

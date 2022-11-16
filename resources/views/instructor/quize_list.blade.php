@@ -3,20 +3,20 @@
 <div class="page-header">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('instructor.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Courses</li>
+    <li class="breadcrumb-item active">Quize User Details</li>
   </ol>
-  <h1 class="page-title">Courses</h1>
+  <h1 class="page-title">Quize Exam User Details</h1>
 </div>
 
 <div class="page-content">
 
 <div class="panel">
         <div class="panel-heading">
-            <div class="panel-title">
+            <!-- <div class="panel-title">
               <a href="{{ route('instructor.course.info') }}" class="btn btn-success btn-sm"><i class="icon wb-plus" aria-hidden="true"></i> Add Course</a>
-            </div>
+            </div> -->
           
-          <div class="panel-actions">
+          <!-- <div class="panel-actions">
           <form method="GET" action="{{ route('instructor.course.list') }}">
               <div class="input-group">
                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ Request::input('search') }}">
@@ -26,7 +26,7 @@
                 </span>
               </div>
           </form>
-          </div>
+          </div> -->
         </div>
         
         <div class="panel-body">
@@ -44,7 +44,7 @@
               @foreach($student as $stu)
               <tr>
                 <td>{{ $stu->id }}</td>
-                <td>{{ $stu->user_id }}</td>
+                <td>{{ $stu->first_name }}</td>
                 <td>{{ $stu->exam_id }}</td>
                 
                 <td>

@@ -530,6 +530,19 @@ class CourseController extends Controller
         $course->is_active = $request->input('is_active');
         $course->save();
 
+
+        $quize_exam_master =  new quize_exam_master();
+        $quize_exam_master->title =  $request->input('course_title');
+        $quize_exam_master->exam_duraction = 30;
+        $quize_exam_master->category_id = $request->input('category_id');
+        $quize_exam_master->instruction_level_id = $request->input('instruction_level_id');
+        $quize_exam_master->status = $request->input('is_active');
+        $quize_exam_master->instructor_id = \Auth::user()->instructor->id;
+        $quize_exam_master->course_id = $course->id;
+        $quize_exam_master->save();
+
+
+
         $course_id = $course->id;
 
         return $this->return_output('flash', 'success', $success_message, 'instructor-course-info/'.$course_id, '200');
@@ -1209,7 +1222,9 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {               $ffmpeg_path = b
         
         $data['student_info'] = User::where('id',$user_id)->get()->first();
 
-        $data['exam_info']=quize_exam_master::where('id',$id)->get()->first();
+        $data['exam_info']=  quize_exam_master::where('course_id',$id)->get()->first(); 
+        
+    
 
         return view('instructor.quize.view_result',$data);
 }

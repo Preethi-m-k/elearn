@@ -28,7 +28,7 @@
                         <table class="table">
                             <tr>
                                 <td>Name : </td>
-                                <td>{{ $student_info->name}}</td>
+                                <td>{{ $student_info->first_name}}</td>
                             </tr>
                             <tr>
                                 <td>E-mail : </td>

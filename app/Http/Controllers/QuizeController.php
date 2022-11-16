@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Auth;
 class QuizeController extends Controller
 {
     /**
@@ -16,7 +17,9 @@ class QuizeController extends Controller
      */
     public function index()
     {
-        $quize = quize::all();
+        $user_id =Auth::id();
+
+        $quize = quize::where('user_id',$user_id)->get();
        
         return view('instructor.quize.list', compact('quize'));
         
@@ -127,6 +130,7 @@ class QuizeController extends Controller
             }else{
                 $q->ans=$request->option_4;
             }
+            $q->user_id = Auth::id();
             
 
 
@@ -140,7 +144,8 @@ class QuizeController extends Controller
         
 
         echo json_encode($return_data);
-        return Redirect::to('payment/form')->withErrors(['payment_error', true]);
+        //return Redirect::to('payment/form')->withErrors(['payment_error', true]);
+        return redirect()->back();
 
 
        
