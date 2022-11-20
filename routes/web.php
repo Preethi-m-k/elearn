@@ -72,6 +72,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('course-rate', 'CourseController@courseRate')->name('course.rate');
         Route::get('delete-rating/{raing_id}', 'CourseController@deleteRating')->name('delete.rating');
 
+        Route::get('assignment/{course_id}', 'CourseController@assignmentCourse')->name('assignment.course');
+
+        Route::post('assignment/userupload', 'CourseController@assignmentUserUpload')->name('uploadAssignment');
+
+
         Route::get('course-enroll-api/{course_slug}/{lecture_slug}/{is_sidebar}', 'CourseController@courseEnrollAPI');
         Route::get('readPDF/{file_id}', 'CourseController@readPDF');
 
@@ -87,8 +92,18 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('course-create', 'CourseController@createInfo')->name('instructor.course.create');
         Route::get('instructor-course-list', 'CourseController@instructorCourseList')->name('instructor.course.list');
+
+        Route::get('instructor-course-assignment-list', 'CourseController@instructorCourseAssignmentList')->name('instructor.course.assignmentlist');
+
+
+        Route::get('instructor-course-assignment/{course_id}', 'CourseController@instructorCourseAssignment')->name('instructor.course.assignment');
+        Route::post('instructor-course-saveassignment', 'CourseController@instructorCourseSaveAssignment')->name('instructor.course.saveassignment');
         Route::get('instructor-course-info', 'CourseController@instructorCourseInfo')->name('instructor.course.info');
         Route::get('instructor-course-info/{course_id}', 'CourseController@instructorCourseInfo')->name('instructor.course.info.edit');
+        Route::get('instructor-course-rating/{assignment_id}', 'CourseController@instructorAssignmentInfo')->name('instructor.course.rating.edit');
+
+        Route::post('instructor-course-save-ratingassignment', 'CourseController@instructorCourseRatingSave')->name('instructor.course.saverating');
+
         Route::post('instructor-course-info-save', 'CourseController@instructorCourseInfoSave')->name('instructor.course.info.save');
 
         Route::get('instructor-course-image', 'CourseController@instructorCourseImage')->name('instructor.course.image');
@@ -198,43 +213,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-///quize
-
-
-// Route::middleware(['auth:admin'])->group(function(){
-
-//     Route::get('/dashboard',[AdminController::class,'index']);
-//     Route::get('/exam_category',[AdminController::class,'exam_category']);
-//     Route::get('/delete_category/{id}',[AdminController::class,'delete_category']);
-//     Route::get('/edit_category/{id}',[AdminController::class,'edit_category']);
-//     Route::get('/category_status/{id}',[AdminController::class,'category_status']);
-//     Route::get('/manage_exam',[AdminController::class,'manage_exam']);
-//     Route::get('/exam_status/{id}',[AdminController::class,'exam_status']);
-//     Route::get('/delete_exam/{id}',[AdminController::class,'delete_exam']);
-//     Route::get('/edit_exam/{id}',[AdminController::class,'edit_exam']);
-//     Route::get('/manage_students',[AdminController::class,'manage_students']);
-//     Route::get('/student_status/{id}',[AdminController::class,'student_status']);
-//     Route::get('/delete_students/{id}',[AdminController::class,'delete_students']);
-//     Route::get('/add_questions/{id}',[AdminController::class,'add_questions']);
-//     Route::get('/question_status/{id}',[AdminController::class,'question_status']);
-//     Route::get('/delete_question/{id}',[AdminController::class,'delete_question']);
-//     Route::get('/update_question/{id}',[AdminController::class,'update_question']);
-//     Route::get('/registered_students',[AdminController::class,'registered_students']);
-//     Route::get('/delete_registered_students/{id}',[AdminController::class,'delete_registered_students']);
-//     Route::get('/apply_exam/{id}',[AdminController::class,'apply_exam']);
-//     Route::get('/admin_view_result/{id}',[AdminController::class,'admin_view_result']);
-
-//     Route::post('/edit_question_inner',[AdminController::class,'edit_question_inner']);
-   
-//     Route::post('/edit_students_final',[AdminController::class,'edit_students_final']);
-//     Route::post('/add_new_exam',[AdminController::class,'add_new_exam']);
-//     Route::post('/add_new_category',[AdminController::class,'add_new_category']);
-//     Route::post('/edit_new_category',[AdminController::class,'edit_new_category']);
-//     Route::post('/edit_exam_sub',[AdminController::class,'edit_exam_sub']);
-//     Route::post('/add_new_students',[AdminController::class,'add_new_students']);
-
-// });
-
 
 
 //quiz
@@ -242,11 +220,13 @@ Route::post('add_new_question','QuizeController@add_new_question')->name('add_ne
 Route::get('quize_list', 'QuizeController@index')->name('quize.list');
 Route::get('question_edit/{id}', 'QuizeController@edit')->name('question_edit');
 Route::get('delete_question/{id}', 'QuizeController@delete_question')->name('delete_question');
-Route::post('/edit_question_inner/{id}','QuizeController@edit_question_inner');
+Route::post('edit_question_inner/{id}','QuizeController@edit_question_inner');
 
 
 Route::get('/view_answer/{id}', 'CourseController@view_answer');
 Route::get('/quize_exam/{id}','CourseController@join_exam');
+
+Route::get('instructor-course-delete/{id}', 'CourseController@delete_cource')->name('instructor-course-delete');
 
 
 Route::post('submit_questions','CourseController@submit_questions');

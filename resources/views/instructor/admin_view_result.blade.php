@@ -31,25 +31,13 @@
                         <table class="table">
                             <tr>
                                 <td>Name : </td>
-                                <td>{{ $student_info->name}}</td>
+                                <td>{{ $student_info->first_name}}</td>
                             </tr>
                             <tr>
                                 <td>E-mail : </td>
                                 <td>{{ $student_info->email}}</td>
-                            </tr>
-                            {{-- <tr>
-                                <td>DOB : </td>
-                                <td>{{ $student_info->dob}}</td>
-                            </tr> --}}
-                            <tr>
-                                <td>Exam name : </td>
-                                <td></td> 
-                                
-                            </tr>
-                            <tr>
-                                <td>Exam date : </td>
-                                <td></td>
-                            </tr>
+                            </tr>                          
+                        
                         </table>
                         <h2>Result info</h2>
                         <table class="table">

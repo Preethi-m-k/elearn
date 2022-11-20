@@ -17,7 +17,7 @@
         </div>
         
         <div class="panel-body">
-        <form action="/edit_question_inner/{{$q->id}}" methode="POST" class="database_operation">  
+        <form action="/edit_question_inner/{{$q->id}}" method="POST" class="database_operation">  
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">

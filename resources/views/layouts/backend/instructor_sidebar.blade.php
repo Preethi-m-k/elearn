@@ -32,6 +32,12 @@
                 <span class="site-menu-title">Quiz user details</span>
             </a>
         </li>
+        <li class="site-menu-item">
+            <a href="{{ route('instructor.course.assignmentlist') }}">
+                <i class="site-menu-icon fas fa-chalkboard" aria-hidden="true"></i>
+                <span class="site-menu-title">Course Assignment List</span>
+            </a>
+        </li>
         <!-- <li class="site-menu-item {{ request()->is('instructor-credits') ? 'active' : '' }}">
             <a href="{{ route('instructor.credits') }}">
                 <i class="site-menu-icon fas fa-hand-holding-usd" aria-hidden="true"></i>

@@ -24,7 +24,7 @@
             <thead>
               <tr>
                 <th>Sl.no</th>
-                <th>Exam id</th>
+                <th>Cource id</th>
                 <th>Question</th>
                 <th>Ansewer</th>
                 <th>Status</th>
@@ -35,7 +35,7 @@
               @foreach($quize as $course)
               <tr>
                 <td>{{ $course->id }}</td>
-                <td>{{ $course->exam_id }}</td>
+                <td>{{ $course->course_id }}</td>
                 <td>{{ $course->questions }}</td>
                 <td>{{ $course->ans }}</td>
                 <td>

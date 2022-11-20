@@ -169,6 +169,11 @@
 
 
                     <a href ="/quize_exam/{{$course->id}}">Quize for The Learning Session</a>
+                    <?php if($rating != ""){ ?>
+                        <a class="float-right" href="#">Your Assignment score is <?= $rating ?></a>
+                    <?php }else { ?>
+                        <a class="float-right" href ="/assignment/{{$course->id}}">Assignment for the Learning session</a>
+                    <?php } ?>
                     @endif
                 </div>
             </div>
@@ -196,8 +201,8 @@
 
                         <li>
                         <a href="/view_result/{{$course->id}}"><i class="fas fa-file-download"></i>view Quize Result</a></li>
-                        <li>
-                        <a href="/view_answer/{{$course->id}}"><i class="fas fa-file-download"></i>view Answer for Quize</a></li>
+                        <!-- <li>
+                        <a href="/view_answer/{{$course->id}}"><i class="fas fa-file-download"></i>view Answer for Quize</a></li> -->
 
 
                     </ul>

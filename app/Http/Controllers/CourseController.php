@@ -24,7 +24,10 @@ use App\quize;
 use App\quize_exam_master;
 use App\quize_result;
 use App\user_exam;
+    
 use Auth;
+use App\Models\UserCourseAssignment;
+
 
 
 
@@ -124,10 +127,11 @@ class CourseController extends Controller
         if(!$course_rating) {
             $course_rating = $this->getColumnTable('course_ratings');
         }
-
-
-
-
+        $assignment = UserCourseAssignment::where('user_id',\Auth::user()->id)->where('course_id', $course->id)->where('deleted_at', NULL)->first();
+        $rating = '';
+        if(isset($assignment)){
+            $rating = $assignment->rating;
+        }
         if($course->id =='' &&  $course->id== NULL)
         {
 
@@ -135,7 +139,7 @@ class CourseController extends Controller
             $course_id =$course->id;
             $quize = quize::where('course_id',$course_id)->get()->first();
         }
-        return view('site.course.learn', compact('course', 'curriculum_sections', 'lectures_count', 'videos_count', 'video', 'course_breadcrumb', 'is_curriculum', 'course_rating', 'students_count','quize'));
+        return view('site.course.learn', compact('course', 'curriculum_sections', 'lectures_count', 'videos_count', 'video', 'course_breadcrumb', 'is_curriculum', 'course_rating', 'students_count','quize','rating'));
     }
 
     public function updateLectureStatus($course_id='', $lecture_id='', $status = '')
@@ -380,7 +384,70 @@ class CourseController extends Controller
         // echo '<pre>';print_r($courses);exit;
         return view('instructor.course.list', compact('courses'));
     }
-
+    public function instructorCourseAssignmentList(Request $request)
+    {
+        $paginate_count = 10;
+        $instructor_id = \Auth::user()->instructor->id;
+        $list = UserCourseAssignment::with(['loadCourse','loadUser'])->where('deleted_at', NULL)->get();
+        return view('instructor.course.assignmentlist', compact('list'));
+    }
+    public function instructorAssignmentInfo($assignment_id, Request $request)
+    {
+        $list = UserCourseAssignment::with(['loadCourse','loadUser'])->where('deleted_at', NULL)->where('id',$assignment_id)->first();
+        $user_id = Auth::user()->id;
+        $file = asset('storage/'.$list->file);
+        // dd($list);
+        return view('instructor.course.assigment_rating', compact('list','file'));
+    }
+    public function instructorCourseRatingSave(Request $request){
+        $assignment_id = $request->assignment_id;
+        $rating = $request->rating;
+        $assignment = UserCourseAssignment::where('id',$assignment_id)->update(['rating'=>$rating]);
+        
+        return redirect()->route('instructor.course.assignmentlist');
+    }
+    public function instructorCourseAssignment($course_id, Request $request){
+        try {
+            $course = Course::where('id',$course_id)->first();
+            $course_name = $course->course_title;
+            $assignment = $course->assignment;
+            return view('instructor.course.assignment', compact('course_id','course_name','assignment'));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+    public function instructorCourseSaveAssignment(Request $request){
+        try {
+            $course_id = $request->course_id;
+            $assignment = $request->assignment;
+            Course::where("id", $course_id)->update(['assignment'=>$assignment]);
+            return redirect()->route('instructor.course.list') ;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+    public function assignmentCourse($course_id, Request $request){
+        $user_id = Auth::id();
+        $course = Course::where('id',$course_id)->first();
+        return view('site.course.assignment', compact('course','user_id'));
+        // $course_user = UserCourseAssignment::where(['course_id'])
+    }
+    public function assignmentUserUpload(Request $request){
+        $user_id = $request->user_id;
+        $course_id = $request->course_id;
+        $course = Course::where('id',$course_id)->first();
+        $pdf = $request->file('file');
+        $file_name = $pdf->getClientOriginalName();
+        $file_type = $pdf->getClientOriginalExtension();
+        $request->file('file')->storeAs('user/'.$user_id, $file_name.'.'.$file_type);
+        UserCourseAssignment::where('course_id',$course_id)->where('user_id', $user_id)->update(['deleted_at'=> date('Y-m-d H:i:s')]);
+        $model = new UserCourseAssignment();
+        $model->course_id = $course_id;
+        $model->user_id = $user_id;
+        $model->file = 'user/'.$user_id.'/'.$file_name.'.'.$file_type;
+        $model->save();
+        return redirect()->route('course.learn', $course->course_slug);
+    }
     public function instructorCourseInfo($course_id = '',Request $request)
     {   
         $categories = Category::where('is_active', 1)->get();
@@ -530,20 +597,17 @@ class CourseController extends Controller
         $course->is_active = $request->input('is_active');
         $course->save();
 
+        $course_id = $course->id;
 
         $quize_exam_master =  new quize_exam_master();
         $quize_exam_master->title =  $request->input('course_title');
-        $quize_exam_master->exam_duraction = 30;
+        $quize_exam_master->exam_duraction = $request->input('duration');
         $quize_exam_master->category_id = $request->input('category_id');
         $quize_exam_master->instruction_level_id = $request->input('instruction_level_id');
         $quize_exam_master->status = $request->input('is_active');
         $quize_exam_master->instructor_id = \Auth::user()->instructor->id;
         $quize_exam_master->course_id = $course->id;
         $quize_exam_master->save();
-
-
-
-        $course_id = $course->id;
 
         return $this->return_output('flash', 'success', $success_message, 'instructor-course-info/'.$course_id, '200');
     }
@@ -1275,9 +1339,33 @@ public function view_answer($id){
        $res->yes_ans=$yes_ans;
        $res->no_ans=$no_ans;
        $res->result_json=json_encode($result);
+       $res->save();
 
-       echo $res->save();
-       return redirect()->back();
+
+
+       $ux = new user_exam();
+       $ux->exam_id = $request->course_id;
+       $ux->user_id = Auth::id();
+       $ux->std_status = 1;
+       $ux->exam_joined = 1;
+       $ux->save();
+
+
+       return redirect('/');
+       return $this->return_output('flash', 'success', 'Course image updated successfully', 'instructor-course-image/'.$course_id, '200');
+    }
+
+
+
+    
+      //Delete questions
+      public function delete_cource($id){
+
+        $q= Course::where('id',$id)->get()->first();
+        $exam_id = $q->exam_id;
+        $q->delete();
+
+        return redirect()->back();
     }
 
 

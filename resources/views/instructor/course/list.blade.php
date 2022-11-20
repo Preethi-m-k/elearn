@@ -65,6 +65,9 @@
                   <a href="{{ url('instructor-course-delete/'.$course->id) }}" class="delete-record btn btn-xs btn-icon btn-inverse btn-round" data-toggle="tooltip" data-original-title="Delete" >
                     <i class="icon wb-trash" aria-hidden="true"></i>
                   </a>
+                  <a href="{{ url('instructor-course-assignment/'.$course->id) }}" class="assignment-record btn btn-xs btn-icon btn-inverse btn-round" data-toggle="tooltip" data-original-title="Assignment" >
+                    <i class="icon wb-book" aria-hidden="true"></i>
+                  </a>
                 </td>
               </tr>
               @endforeach

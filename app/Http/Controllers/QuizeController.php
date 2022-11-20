@@ -188,7 +188,9 @@ class QuizeController extends Controller
         
         $q->update();
 
-        echo json_encode(array('status'=>'true','message'=>'successfully updated','reload'=>url('admin/add_questions/'.$q->exam_id)));
+        echo json_encode(array('status'=>'true','message'=>'successfully updated','reload'=>url('quize.list'.$q->exam_id)));
+
+        return redirect()->back();
 
     }
 
